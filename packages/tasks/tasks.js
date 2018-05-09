@@ -2,7 +2,7 @@ const router = require('express').Router();
 const db = require('../db/db');
 const { validate } = require('jsonschema');
 
-const newTask = text => ({
+const newForm = text => ({
   id: String(Math.random()
     .toString(16)
     .split('.')[1]),
@@ -10,34 +10,33 @@ const newTask = text => ({
   isCompleted: false,
 });
 
-// router.use('/:id', (req, res, next) => {
-//   const task = db.get('tasks')
-//     .find({ id: req.params.id })
-//     .value();
-//
-//   if (!task) {
-//     next(new Error('CAN_NOT_FIND_TASK'));
-//   }
-// });
-
-// GET /tasks
-router.get('/', (req, res) => {
-  const tasks = db.get('tasks').value();
-
-  res.json({ status: 'OK', data: tasks });
-});
-
-// GET /tasks/:id
-router.get('/:id', (req, res) => {
-  const task = db
-    .get('tasks')
+router.use('/:id', (req, res, next) => {
+  const task = db.get('forms')
     .find({ id: req.params.id })
     .value();
 
-  res.json({ status: 'OK', data: task });
+  if (!form) {
+    next(new Error('CAN_NOT_FIND_FORM'));
+  }
 });
 
-// POST /tasks
+// GET /forms
+router.get('/', (req, res) => {
+  const forms = db.get('forms').value();
+  res.json({ status: 'OK', data: forms });
+});
+
+// GET /forms/:id
+router.get('/:id', (req, res) => {
+  const form = db
+    .get('forms')
+    .find({ id: req.params.id })
+    .value();
+
+  res.json({ status: 'OK', data: form });
+});
+
+// POST /forms
 router.post('/', (req, res, next) => {
   // const requestBodySchema = {
   //   id: 'path-task',
@@ -51,19 +50,19 @@ router.post('/', (req, res, next) => {
   //   next(new Error('INVALID_API_FORMAT'));
   // }
 
-  const task = newTask(req.body.text);
+  const form = newForm(req.body.text);
 
-  console.log(task);
+  console.log(form);
 
   db
-    .get('tasks')
-    .push(task)
+    .get('forms')
+    .push(form)
     .write();
 
-  res.json({ status: 'OK', data: task });
+  res.json({ status: 'OK', data: form });
 });
 
-// PATCH /tasks/:id
+// PATCH /forms/:id
 router.patch('/:id', (req, res, next) => {
   // const requestBodySchema = {
   //   id: 'path-task',
@@ -80,21 +79,21 @@ router.patch('/:id', (req, res, next) => {
   //   next(new Error('INVALID_API_FORMAT'));
   // }
 
-  const task = db
-    .get('tasks')
+  const form = db
+    .get('forms')
     .find({ id: req.params.id })
     .assign(req.body)
     .value();
 
   db.write();
 
-  res.json({ status: 'OK', data: task });
+  res.json({ status: 'OK', data: form });
 });
 
 // DELETE /tasks/:id
 router.delete('/:id', (req, res) => {
   db
-    .get('tasks')
+    .get('forms')
     .remove({ id: req.params.id })
     .write();
 

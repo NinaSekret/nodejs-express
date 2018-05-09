@@ -1,5 +1,5 @@
 {
-  "tasks": [
+  "forms": [
     {
       "id": "e69fcfb925bbf",
       "text": "test",
@@ -35,6 +35,11 @@
       "id": "c0aaec4a82c2d",
       "text": "Тестовая задача",
       "isCompleted": true
+    },
+    {
+      "id": "76ca70ff4e48c",
+      "text": "Тестовая задача",
+      "isCompleted": false
     }
   ]
 }
