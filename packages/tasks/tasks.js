@@ -2,23 +2,48 @@ const router = require('express').Router();
 const db = require('../db/db');
 const { validate } = require('jsonschema');
 
-const newForm = text => ({
-  id: String(Math.random()
-    .toString(16)
-    .split('.')[1]),
-  text,
-  isCompleted: false,
-});
 
+const newForm = requestBody => {
+  const allowedReqParams = [
+  "fio",
+  "old-surname",
+  "position",
+  "work-start-time",
+  "phone-number",
+  "email",
+  "skype",
+  "serial",
+  "number",
+  "issued",
+  "birthday",
+  "place-of-birth",
+  "registration-address",
+  "home-address"
+  ];
+  var result = {
+    id: String(Math.random()
+      .toString(16)
+      .split('.')[1])
+  };
+
+  for (var i = 0; i < allowedReqParams.length; i++) {
+    result[allowedReqParams[i]] = requestBody[allowedReqParams[i]];
+  };
+
+  return result;
+};
+
+/*
 router.use('/:id', (req, res, next) => {
-  const task = db.get('forms')
+
+  const form = db.get('forms')
     .find({ id: req.params.id })
     .value();
 
   if (!form) {
     next(new Error('CAN_NOT_FIND_FORM'));
   }
-});
+});*/
 
 // GET /forms
 router.get('/', (req, res) => {
@@ -50,7 +75,7 @@ router.post('/', (req, res, next) => {
   //   next(new Error('INVALID_API_FORMAT'));
   // }
 
-  const form = newForm(req.body.text);
+  const form = newForm(req.body);
 
   console.log(form);
 
